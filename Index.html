@@ -87,5 +87,8 @@
 		<button class="btn btn-primary btn-block" ng-click="adicionarContato(contato)" ng-disabled="!contato.nome || !contato.telefone">Adicionar</button>
 		<button class="btn btn-danger btn-block" ng-click="apagarContatos(contatos)" ng-if="isContatoSelecionado(contatos)">Apagar Contatos</button>
 	</div>
+	<!-- Por estar usando um protocolo File, o Chrome bloqueia essa chamada, por conta da politica Same origem police. 
+	O objetivo foi apenas testar a diretiva ng-include-->
+	<div ng-include="'footer.html'"></div>
 </body>
 </html>
