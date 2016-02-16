@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html ng-app="listaTelefonica" >
 <head>
+    <meta charset="utf-8"/>
 	<title>Lista telefonica</title>
 	<link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap.css">
 	<style type="text/css">
@@ -76,15 +77,22 @@
 				<td><div style="width: 20px; height: 20px;" ng-style="{'background-color': contato.cor}"></div></td>
 			</tr>
 		</table>
-		<hr/>
-		<input class="form-control" type="text" ng-model="contato.nome" placeholder="nome"/>
-		<input class="form-control" type="text" ng-model="contato.telefone" placeholder="telefone"/>
-		<!--<select class="form-control" ng-model="contato.operadora" ng-options="operadora.codigo as operadora.nome for operadora in operadoras"> -->
-		<!--<select class="form-control" ng-model="contato.operadora" ng-options="operadora.nome group by operadora.categoria for operadora in operadoras"> -->
-		<select class="form-control" ng-model="contato.operadora" ng-options="operadora.nome for operadora in operadoras">
-			<option value="">Selecione uma operadora</option>
-		</select>
-		<button class="btn btn-primary btn-block" ng-click="adicionarContato(contato)" ng-disabled="!contato.nome || !contato.telefone">Adicionar</button>
+		<form name="contatoForm">
+			<input class="form-control" type="text" placeholder="nome" name="nome" ng-model="contato.nome" ng-required="true"/>
+			<input class="form-control" type="text" placeholder="telefone" name="telefone" ng-model="contato.telefone" ng-required="true"/>
+			<!--<select class="form-control" ng-model="contato.operadora" ng-options="operadora.codigo as operadora.nome for operadora in operadoras"> -->
+			<!--<select class="form-control" ng-model="contato.operadora" ng-options="operadora.nome group by operadora.categoria for operadora in operadoras"> -->
+			<select class="form-control" ng-model="contato.operadora" ng-options="operadora.nome for operadora in operadoras">
+				<option value="">Selecione uma operadora</option>
+			</select>
+		</form>
+        <div ng-show="contatoForm.nome.$invalid" class="alert alert-danger">
+            Por favor, preencha o campo nome.
+        </div>
+        <div ng-show="contatoForm.telefone.$invalid" class="alert alert-danger">
+            Por favor, preencha o campo telefone.
+        </div>
+		<button class="btn btn-primary btn-block" ng-click="adicionarContato(contato)" ng-disabled="cantatoForm.$invalid">Adicionar</button>
 		<button class="btn btn-danger btn-block" ng-click="apagarContatos(contatos)" ng-if="isContatoSelecionado(contatos)">Apagar Contatos</button>
 	</div>
 	<!-- Por estar usando um protocolo File, o Chrome bloqueia essa chamada, por conta da politica Same origem police. 
