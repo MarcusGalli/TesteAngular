@@ -24,6 +24,7 @@
 		}
 	</style>
 	<script src="lib/angular/angular.js"></script>
+    <script src="lib/angular/angular-locale_pt-br.js"></script>
     <script src="lib/angular/angular-messages.js"></script>
 	<script>
 		angular.module("listaTelefonica", ["ngMessages"]);
@@ -35,11 +36,11 @@
 				{ nome: "Maria", telefone: "9992-8882", cor: "red", data: new Date(), operadora: { nome: "GVT", codigo: 25, categoria: "Fixo" } }
 			];
 			$scope.operadoras = [
-				{ nome: "Oi", codigo: 14, categoria: "Celular" },
-				{ nome: "Vivo", codigo: 15, categoria: "Celular" },
-				{ nome: "Tim", codigo: 41, categoria: "Celular" },
-				{ nome: "GVT", codigo: 25, categoria: "Fixo" },
-				{ nome: "Embratel", codigo: 21, categoria: "Fixo" }
+				{ nome: "Oi", codigo: 14, categoria: "Celular", preco: 2 },
+				{ nome: "Vivo", codigo: 15, categoria: "Celular", preco: 1 },
+				{ nome: "Tim", codigo: 41, categoria: "Celular", preco: 3 },
+				{ nome: "GVT", codigo: 25, categoria: "Fixo", preco: 1 },
+				{ nome: "Embratel", codigo: 21, categoria: "Fixo", preco: 2 }
 			];
 			$scope.adicionarContato = function (contato) {
 				$scope.contatos.push(contato);
@@ -52,9 +53,13 @@
 				});
 			};
 			$scope.isContatoSelecionado = function (contatos) {
-				return contatos.some(function (contato) {
-					return contato.selecionado;
-				});
+			    return contatos.some(function (contato) {
+			        return contato.selecionado;
+			    });
+			};
+			$scope.ordenarPor = function (campo) {
+			    $scope.criterioDeOrdenacao = campo;
+			    $scope.direcaoDaOrdenacao = !$scope.direcaoDaOrdenacao;
 			}
 		});
 	</script>
@@ -66,13 +71,14 @@
 		<table ng-show="contatos.length > 0" class="table">
 			<tr>
 				<th></th>
-				<th>Nome</th>
-				<th>Telefone</th>
+				<th><a href="" ng-click="ordenarPor('nome')">Nome</a></th>
+				<th><a href="" ng-click="ordenarPor('telefone')">Telefone</a></th>
 				<th>Operadora</th>
                 <th>Data</th>
 				<th></th>
 			</tr>
-			<tr ng-class="{'selecionado negrito': contato.selecionado}" ng-repeat="contato in contatos | filter:{nome:criterioDeBusca}">
+            <!--orderBy > | orderBy:'nome' OU | orderBy:'+nome' OU | orderBy:'-nome' OU | orderBy:'nome' : false OU | orderBy:'nome' : true-->
+			<tr ng-class="{'selecionado negrito': contato.selecionado}" ng-repeat="contato in contatos | filter:criterioDeBusca | orderBy:criterioDeOrdenacao : direcaoDaOrdenacao">
 				<td><input type="checkbox" ng-model="contato.selecionado"/></td>
 				<td>{{contato.nome | uppercase}}</td>
 				<td>{{contato.telefone}}</td>
@@ -86,11 +92,11 @@
 			<input class="form-control" type="text" placeholder="telefone" name="telefone" ng-model="contato.telefone" ng-required="true" ng-pattern="/^\d{4,5}-\d{4}$/"/>
 			<!--<select class="form-control" ng-model="contato.operadora" ng-options="operadora.codigo as operadora.nome for operadora in operadoras"> -->
 			<!--<select class="form-control" ng-model="contato.operadora" ng-options="operadora.nome group by operadora.categoria for operadora in operadoras"> -->
-			<select class="form-control" ng-model="contato.operadora" ng-options="operadora.nome for operadora in operadoras">
+			<select class="form-control" ng-model="contato.operadora" ng-options="operadora.nome + ' ( ' + (operadora.preco | currency) + ' )' for operadora in operadoras | orderBy:'nome'">
 				<option value="">Selecione uma operadora</option>
 			</select>
 		</form>
-        <div ng-messages="contatoForm.nome.$error" >
+        <div ng-show="contatoForm.nome.$dirty" ng-messages="contatoForm.nome.$error" >
             <div ng-message="required" class="alert alert-danger">
                 Por favor, preencha o campo nome.
             </div>
