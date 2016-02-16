@@ -1,7 +1,6 @@
-<!DOCTYPE html>
 <html ng-app="listaTelefonica" >
 <head>
-    <meta charset="utf-8"/>
+    <meta charset="UTF-8"/>
 	<title>Lista telefonica</title>
 	<link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap.css">
 	<style type="text/css">
@@ -79,7 +78,7 @@
 			</tr>
 		</table>
 		<form name="contatoForm">
-			<input class="form-control" type="text" placeholder="nome" name="nome" ng-model="contato.nome" ng-required="true"/>
+			<input class="form-control" type="text" placeholder="nome" name="nome" ng-model="contato.nome" ng-required="true" ng-minlength="10"/>
 			<input class="form-control" type="text" placeholder="telefone" name="telefone" ng-model="contato.telefone" ng-required="true"/>
 			<!--<select class="form-control" ng-model="contato.operadora" ng-options="operadora.codigo as operadora.nome for operadora in operadoras"> -->
 			<!--<select class="form-control" ng-model="contato.operadora" ng-options="operadora.nome group by operadora.categoria for operadora in operadoras"> -->
@@ -87,10 +86,13 @@
 				<option value="">Selecione uma operadora</option>
 			</select>
 		</form>
-        <div ng-show="contatoForm.telefone.$invalid && contatoForm.telefone.$pristine" class="alert alert-danger">
+        <div ng-show="contatoForm.nome.$error.required && contatoForm.nome.$dirty" class="alert alert-danger">
             Por favor, preencha o campo nome.
         </div>
-        <div ng-show="contatoForm.telefone.$invalid && contatoForm.telefone.$pristine" class="alert alert-danger">
+        <div ng-show="contatoForm.nome.$error.minlength" class="alert alert-danger">
+            O campo nome deve ter no mínimo 10 caracteres.
+        </div>
+        <div ng-show="contatoForm.telefone.$invalid && contatoForm.telefone.$dirty" class="alert alert-danger">
             Por favor, preencha o campo telefone.
         </div>
 		<button class="btn btn-primary btn-block" ng-click="adicionarContato(contato)" ng-disabled="cantatoForm.$invalid">Adicionar</button>
