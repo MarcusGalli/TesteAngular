@@ -5,7 +5,7 @@
 	<link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap.css">
 	<style type="text/css">
 		.jumbotron{
-			width:400px;
+			width:650px;
 			text-align: center;
 			margin-left: auto;
 			margin-right: auto;
@@ -30,16 +30,16 @@
 		angular.module("listaTelefonica").controller("listaTelefonicaCtrl", function($scope){
 			$scope.app = "Lista Telefonica";
 			$scope.contatos = [
-				{nome: "Pedro", telefone: "9999-8888", cor: "blue"},
-				{nome: "Ana", telefone: "9991-8881", cor: "yellow"},
-				{nome: "Maria", telefone: "9992-8882", cor: "red"}
+				{ nome: "Pedro", telefone: "9999-8888", cor: "blue", data: new Date(), operadora: { nome: "Oi", codigo: 14, categoria: "Celular" } },
+				{ nome: "Ana", telefone: "9991-8881", cor: "yellow", data: new Date(), operadora: { nome: "Vivo", codigo: 15, categoria: "Celular" } },
+				{ nome: "Maria", telefone: "9992-8882", cor: "red", data: new Date(), operadora: { nome: "GVT", codigo: 25, categoria: "Fixo" } }
 			];
 			$scope.operadoras = [
-				{nome: "Oi",  codigo: 14, categoria: "Celular"},
-				{nome: "Vivo",  codigo: 15, categoria: "Celular"},
-				{nome: "Tim",  codigo: 41, categoria: "Celular"},
-				{nome: "GVT",  codigo: 25, categoria: "Fixo"},
-				{nome: "Embratel",  codigo: 21, categoria: "Fixo"}
+				{ nome: "Oi", codigo: 14, categoria: "Celular" },
+				{ nome: "Vivo", codigo: 15, categoria: "Celular" },
+				{ nome: "Tim", codigo: 41, categoria: "Celular" },
+				{ nome: "GVT", codigo: 25, categoria: "Fixo" },
+				{ nome: "Embratel", codigo: 21, categoria: "Fixo" }
 			];
 			$scope.adicionarContato = function (contato) {
 				$scope.contatos.push(contato);
@@ -68,13 +68,15 @@
 				<th>Nome</th>
 				<th>Telefone</th>
 				<th>Operadora</th>
+                <th>Data</th>
 				<th></th>
 			</tr>
 			<tr ng-class="{'selecionado negrito': contato.selecionado}" ng-repeat="contato in contatos">
 				<td><input type="checkbox" ng-model="contato.selecionado"/></td>
-				<td>{{contato.nome}}</td>
+				<td>{{contato.nome | uppercase}}</td>
 				<td>{{contato.telefone}}</td>
-				<td>{{contato.operadora.nome}}</td>
+				<td>{{contato.operadora.nome | lowercase}}</td>
+                <td>{{contato.data | date:'dd/MM/yyyy HH:mm'}}</td>
 				<td><div style="width: 20px; height: 20px;" ng-style="{'background-color': contato.cor}"></div></td>
 			</tr>
 		</table>
