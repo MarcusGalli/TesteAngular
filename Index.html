@@ -10,6 +10,9 @@
 			margin-left: auto;
 			margin-right: auto;
 		}
+		h3 {
+			margin-bottom: 30px;
+		}
 		.table{
 			margin-top: 20px;
 		}
@@ -22,30 +25,40 @@
 		.negrito{
 			font-weight: bold;
 		}
+		hr {
+			border-color: #999;
+		}
 	</style>
 	<script src="lib/angular/angular.js"></script>
+    <script src="lib/angular/angular-messages.js"></script>    
     <script src="lib/angular/angular-locale_pt-br.js"></script>
-    <script src="lib/angular/angular-messages.js"></script>
 	<script>
 		angular.module("listaTelefonica", ["ngMessages"]);
-		angular.module("listaTelefonica").controller("listaTelefonicaCtrl", function($scope, $filter){
+		angular.module("listaTelefonica").controller("listaTelefonicaCtrl", function($scope, $filter, $http){
 			$scope.app = "Lista Telefonica";
-			$scope.contatos = [
-				{ nome: $filter('uppercase')("Pedro"), telefone: "9999-8888", cor: "blue", data: new Date(), operadora: { nome: "Oi", codigo: 14, categoria: "Celular" } },
-				{ nome: "Ana", telefone: "9991-8881", cor: "yellow", data: new Date(), operadora: { nome: "Vivo", codigo: 15, categoria: "Celular" } },
-				{ nome: "Maria", telefone: "9992-8882", cor: "red", data: new Date(), operadora: { nome: "GVT", codigo: 25, categoria: "Fixo" } }
-			];
-			$scope.operadoras = [
-				{ nome: "Oi", codigo: 14, categoria: "Celular", preco: 2 },
-				{ nome: "Vivo", codigo: 15, categoria: "Celular", preco: 1 },
-				{ nome: "Tim", codigo: 41, categoria: "Celular", preco: 3 },
-				{ nome: "GVT", codigo: 25, categoria: "Fixo", preco: 1 },
-				{ nome: "Embratel", codigo: 21, categoria: "Fixo", preco: 2 }
-			];
+			$scope.contatos = [];
+			$scope.operadoras = [];
+			
+			var carregarContatos = function () {
+				$http.get("http://localhost:1234/contatos").success(function (data) {
+					$scope.contatos = data;
+				}).error(function (data, status) {
+					$scope.message = "Aconteceu um problema: " + data;
+				});
+			};
+			var carregarOperadoras = function () {
+				$http.get("http://localhost:1234/operadoras").success(function (data) {
+					$scope.operadoras = data;
+				});
+			};
+
 			$scope.adicionarContato = function (contato) {
-				$scope.contatos.push(contato);
-				delete $scope.contato;
-				$scope.contatoForm.$setPristine();
+				contato.data = new Date();
+				$http.post("http://localhost:1234/contatos", contato).success(function (data) {
+					delete $scope.contato;
+					$scope.contatoForm.$setPristine();
+					carregarContatos();
+				});
 			};
 			$scope.apagarContatos = function (contatos){
 				$scope.contatos = contatos.filter(function (contato) {
@@ -60,7 +73,10 @@
 			$scope.ordenarPor = function (campo) {
 			    $scope.criterioDeOrdenacao = campo;
 			    $scope.direcaoDaOrdenacao = !$scope.direcaoDaOrdenacao;
-			}
+			};
+
+			carregarContatos();
+			carregarOperadoras();
 		});
 	</script>
 </head>
@@ -115,7 +131,7 @@
 		<button class="btn btn-primary btn-block" ng-click="adicionarContato(contato)" ng-disabled="cantatoForm.$invalid">Adicionar</button>
 		<button class="btn btn-danger btn-block" ng-click="apagarContatos(contatos)" ng-if="isContatoSelecionado(contatos)">Apagar Contatos</button>
 	</div>
-	<!-- Por estar usando um protocolo File, o Chrome bloqueia essa chamada, por conta da politica Same origem police. 
+	<!-- Por estar usando um protocolo File, o Chrome bloqueia essa chamada, por conta da politica Same Origem Police(SOP). 
 	O objetivo foi apenas testar a diretiva ng-include-->
 	<div ng-include="'footer.html'"></div>
 </body>
