@@ -44,6 +44,7 @@
 			$scope.adicionarContato = function (contato) {
 				$scope.contatos.push(contato);
 				delete $scope.contato;
+				$scope.contatoForm.$setPristine();
 			};
 			$scope.apagarContatos = function (contatos){
 				$scope.contatos = contatos.filter(function (contato) {
@@ -86,10 +87,10 @@
 				<option value="">Selecione uma operadora</option>
 			</select>
 		</form>
-        <div ng-show="contatoForm.nome.$invalid" class="alert alert-danger">
+        <div ng-show="contatoForm.telefone.$invalid && contatoForm.telefone.$pristine" class="alert alert-danger">
             Por favor, preencha o campo nome.
         </div>
-        <div ng-show="contatoForm.telefone.$invalid" class="alert alert-danger">
+        <div ng-show="contatoForm.telefone.$invalid && contatoForm.telefone.$pristine" class="alert alert-danger">
             Por favor, preencha o campo telefone.
         </div>
 		<button class="btn btn-primary btn-block" ng-click="adicionarContato(contato)" ng-disabled="cantatoForm.$invalid">Adicionar</button>
