@@ -78,9 +78,10 @@
 				<th></th>
 			</tr>
             <!--orderBy > | orderBy:'nome' OU | orderBy:'+nome' OU | orderBy:'-nome' OU | orderBy:'nome' : false OU | orderBy:'nome' : true-->
+            <!--limitTo > | limitTo : 2 >> determina a quantidade de registros do Array, lembre-se que de acordo com a ordem dos filters aplicados influência o resultado.-->
 			<tr ng-class="{'selecionado negrito': contato.selecionado}" ng-repeat="contato in contatos | filter:criterioDeBusca | orderBy:criterioDeOrdenacao : direcaoDaOrdenacao">
 				<td><input type="checkbox" ng-model="contato.selecionado"/></td>
-				<td>{{contato.nome | uppercase}}</td>
+				<td>{{contato.nome | uppercase  | limitTo : 15}}</td>
 				<td>{{contato.telefone}}</td>
 				<td>{{contato.operadora.nome | lowercase}}</td>
                 <td>{{contato.data | date:'dd/MM/yyyy HH:mm'}}</td>
