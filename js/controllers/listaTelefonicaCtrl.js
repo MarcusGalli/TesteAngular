@@ -40,7 +40,6 @@ angular.module("listaTelefonica").controller("listaTelefonicaCtrl", function($sc
 	    $scope.direcaoDaOrdenacao = !$scope.direcaoDaOrdenacao;
 	};
 
-	console.log(serialGenerator.generate());
 	carregarContatos();
 	carregarOperadoras();
 });
