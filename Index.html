@@ -18,15 +18,31 @@
 	<script src="js/filters/nameFilters.js"></script>
 	<script src="js/filters/ellipsisFilters.js"></script>
 	<script src="js/directives/uiAlertDirective.js"></script>
+	<script src="js/directives/uiDateDirective.js"></script>
+	<script src="js/directives/uiAccordionDirective.js"></script>
 </head>
 <body ng-controller="listaTelefonicaCtrl">
 	<div class="jumbotron">
 		<h3>{{app}}</h3>
 
-		<ui-alert title="Ops, ocorreu um problema!" message="error"></ui-alert>
+		<ui-alert title="Ops, ocorreu um problema!">
+			{{error}}
+		</ui-alert>
+
+		<ui-accordions>
+			<ui-accordion title="titulo 1">
+				teste de texto do titulo 01: bla vla bla bla bla bla bla vla bla bla bla bla bla vla bla bla bla bla 
+			</ui-accordion>
+			<ui-accordion title="titulo 2">
+				teste de texto do titulo 02: ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble
+			</ui-accordion>
+			<ui-accordion title="titulo 3">
+				teste de texto do titulo 02: ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble
+			</ui-accordion>
+		</ui-accordions>
 
         <input type="text" class="form-control" ng-model="criterioDeBusca" placeholder="O que você está buscando?" />
-		<table ng-show="contatos.length > 0" class="table">
+		<table ng-show="contatos.length > 0" class="table table-striped">
 			<tr>
 				<th></th>
 				<th>Serial</th>
@@ -51,6 +67,7 @@
 		<form name="contatoForm">
 			<input class="form-control" type="text" placeholder="nome" name="nome" ng-model="contato.nome" ng-required="true" ng-minlength="10"/>
 			<input class="form-control" type="text" placeholder="telefone" name="telefone" ng-model="contato.telefone" ng-required="true" ng-pattern="/^\d{4,5}-\d{4}$/"/>
+			<input class="form-control" type="text" placeholder="Data" name="data" ng-model="contato.data" ui-date/>
 			<!--<select class="form-control" ng-model="contato.operadora" ng-options="operadora.codigo as operadora.nome for operadora in operadoras"> -->
 			<!--<select class="form-control" ng-model="contato.operadora" ng-options="operadora.nome group by operadora.categoria for operadora in operadoras"> -->
 			<select class="form-control" ng-model="contato.operadora" ng-options="operadora.nome + ' ( ' + (operadora.preco | currency) + ' )' for operadora in operadoras | orderBy:'nome'">
