@@ -1,6 +1,6 @@
 angular.module("listaTelefonica").directive("uiDate", function ($filter) {
 	return {
-		required: "ngModel",
+		require: "ngModel",
 		link: function (scope, element, attrs, ctrl) {
 			var _formatDate = function (date) {
 				//troca tudo que não for numero por string vazia.
@@ -32,7 +32,7 @@ angular.module("listaTelefonica").directive("uiDate", function ($filter) {
 				}
 			});
 
-			ctrl.formatters.push( function (value) {
+			ctrl.$formatters.push( function (value) {
 				/*APENAS PARA EXEMPLO
 					Caso contrario ao anterior onde o valor que temos no $scope seja por padrão em milisegundos
 					mas o valor que será apresentado no campo deve ser no formato de data literal.
