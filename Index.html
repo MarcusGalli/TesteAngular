@@ -7,91 +7,26 @@
 	<link rel="stylesheet" type="text/css" href="css/ui.css">
 	<script src="lib/angular/angular.js"></script>
     <script src="lib/angular/angular-messages.js"></script>    
+    <script src="lib/angular/angular-route.js"></script>
     <script src="lib/angular/angular-locale_pt-br.js"></script>
     <script src="lib/serialGenerator/serialGenerator.js"></script>
     <script src="lib/ui/ui.js"></script>
     <script src="js/app.js"></script>
 	<script src="js/controllers/listaTelefonicaCtrl.js"></script>
+	<script src="js/controllers/novoContatoCtrl.js"></script>
+	<script src="js/controllers/detalhesContatoCtrl.js"></script>
 	<script src="js/services/contatosAPIService.js"></script>
 	<script src="js/services/operadorasAPIService.js"></script>	
 	<script src="js/config/serialGeneratorConfig.js"></script>
+	<script src="js/config/routeConfig.js"></script>
 	<script src="js/value/configValue.js"></script>
 	<script src="js/filters/nameFilters.js"></script>
 	<script src="js/filters/ellipsisFilters.js"></script>
 	<script src="js/directives/uiAlertDirective.js"></script>
 	<script src="js/directives/uiDateDirective.js"></script>
 </head>
-<body ng-controller="listaTelefonicaCtrl">
-	<div class="jumbotron">
-		<h3>{{app}}</h3>
-
-		<ui-alert title="Ops, ocorreu um problema!">
-			{{error}}
-		</ui-alert>
-
-		<ui-accordions>
-			<ui-accordion title="titulo 1">
-				teste de texto do titulo 01: bla vla bla bla bla bla bla vla bla bla bla bla bla vla bla bla bla bla 
-			</ui-accordion>
-			<ui-accordion title="titulo 2">
-				teste de texto do titulo 02: ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble
-			</ui-accordion>
-			<ui-accordion title="titulo 3">
-				teste de texto do titulo 02: ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble
-			</ui-accordion>
-		</ui-accordions>
-
-        <input type="text" class="form-control" ng-model="criterioDeBusca" placeholder="O que você está buscando?" />
-		<table ng-show="contatos.length > 0" class="table table-striped">
-			<tr>
-				<th></th>
-				<th>Serial</th>
-				<th><a href="" ng-click="ordenarPor('nome')">Nome</a></th>
-				<th><a href="" ng-click="ordenarPor('telefone')">Telefone</a></th>
-				<th>Operadora</th>
-                <th>Data</th>
-				<th></th>
-			</tr>
-            <!--orderBy > | orderBy:'nome' OU | orderBy:'+nome' OU | orderBy:'-nome' OU | orderBy:'nome' : false OU | orderBy:'nome' : true-->
-            <!--limitTo > | limitTo : 2 >> determina a quantidade de registros do Array, lembre-se que de acordo com a ordem dos filters aplicados influência o resultado.-->
-			<tr ng-class="{'selecionado negrito': contato.selecionado}" ng-repeat="contato in contatos | filter:criterioDeBusca | orderBy:criterioDeOrdenacao : direcaoDaOrdenacao">
-				<td><input type="checkbox" ng-model="contato.selecionado"/></td>
-				<td>{{contato.serial}}</td>
-				<td>{{contato.nome | name | ellipsis: 10}}</td>
-				<td>{{contato.telefone}}</td>
-				<td>{{contato.operadora.nome | lowercase}}</td>
-                <td>{{contato.data | date:'dd/MM/yyyy HH:mm'}}</td>
-				<td><div style="width: 20px; height: 20px;" ng-style="{'background-color': contato.cor}"></div></td>
-			</tr>
-		</table>
-		<form name="contatoForm">
-			<input class="form-control" type="text" placeholder="nome" name="nome" ng-model="contato.nome" ng-required="true" ng-minlength="10"/>
-			<input class="form-control" type="text" placeholder="telefone" name="telefone" ng-model="contato.telefone" ng-required="true" ng-pattern="/^\d{4,5}-\d{4}$/"/>
-			<input class="form-control" type="text" placeholder="Data" name="data" ng-model="contato.data" ui-date/>
-			<!--<select class="form-control" ng-model="contato.operadora" ng-options="operadora.codigo as operadora.nome for operadora in operadoras"> -->
-			<!--<select class="form-control" ng-model="contato.operadora" ng-options="operadora.nome group by operadora.categoria for operadora in operadoras"> -->
-			<select class="form-control" ng-model="contato.operadora" ng-options="operadora.nome + ' ( ' + (operadora.preco | currency) + ' )' for operadora in operadoras | orderBy:'nome'">
-				<option value="">Selecione uma operadora</option>
-			</select>
-		</form>
-        <div ng-show="contatoForm.nome.$dirty" ng-messages="contatoForm.nome.$error" >
-            <div ng-message="required" class="alert alert-danger">
-                Por favor, preencha o campo nome.
-            </div>
-            <div ng-message="minlength" class="alert alert-danger">
-                O campo nome deve ter no mínimo 10 caracteres.
-            </div>
-        </div>        
-
-        <div ng-show="contatoForm.telefone.$error.required && contatoForm.telefone.$dirty" class="alert alert-danger">
-            Por favor, preencha o campo telefone.
-        </div>
-        <div ng-show="contatoForm.telefone.$error.pattern" class="alert alert-danger">
-            O campo telefone deve ter formato DDDDD-DDDD.
-        </div>
-		<button class="btn btn-primary btn-block" ng-click="adicionarContato(contato)" ng-disabled="cantatoForm.$invalid">Adicionar</button>
-		<button class="btn btn-danger btn-block" ng-click="apagarContatos(contatos)" ng-if="isContatoSelecionado(contatos)">Apagar Contatos</button>
-	</div>
+<body >
+	<div ng-view></div>
 	<!-- Por estar usando um protocolo File, o Chrome bloqueia essa chamada, por conta da politica Same Origem Police(SOP). 
 	O objetivo foi apenas testar a diretiva ng-include-->
 	<div ng-include="'view/footer.html'"></div>
